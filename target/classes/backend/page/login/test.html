@@ -1,0 +1,183 @@
+<template>
+    <div>
+        <div class="login_head">
+            <div style="display: inline-block; vertical-align: middle">
+                <img src="../icons/svg/logo.svg" alt="" class="logo_svg" />
+            </div>
+            <div style="display: inline-block">
+                <label style="color: aliceblue; font-size: x-large">帐房先生 </label>
+            </div>
+        </div>
+
+        <img src="../icons/svg/login.svg" alt="" class="login_svg" />
+        <el-form
+                class="login_container"
+                ref="form"
+                :model="form"
+                :rules="rules"
+                label-width="80px"
+        >
+            <div class="login_header">
+                <h3 class="login_title">后台管理系统</h3>
+            </div>
+            <el-form-item prop="username">
+        <span slot="label">
+          <span style="color: aliceblue">账号</span>
+        </span>
+                <el-input v-model="form.username" placeholder="请输入账号"></el-input>
+            </el-form-item>
+            <el-form-item prop="password">
+        <span slot="label">
+          <span style="color: aliceblue">密码</span>
+        </span>
+                <el-input
+                        v-model="form.password"
+                        placeholder="请输入密码"
+                        show-password
+                ></el-input>
+            </el-form-item>
+            <el-form-item style="margin-top: 35px; margin-bottom: 35px">
+                <el-button @click.native.prevent="submitForm('form')" type="primary"> 登 录 </el-button>
+
+            </el-form-item>
+        </el-form>
+    </div>
+</template>
+
+<script>
+import { userLogin } from "@/api/request";
+export default {
+  data() {
+    var validatename = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入用户名"));
+      } else {
+        if (/^\w{3,6}$/.test(value)) {
+          callback();
+        } else {
+          callback(new Error("请输入3-6位的数字、字母、下划线"));
+        }
+      }
+    };
+
+    var validatePwd = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (/^\w{3,6}$/.test(value)) {
+          callback();
+        } else {
+          callback(new Error("请输入3-6位的数字、字母、下划线"));
+        }
+      }
+    };
+    return {
+      form: {
+        username: "",
+        password: "",
+      },
+      rules: {
+        username: [
+          {
+            required: true,
+            trigger: "blur",
+            validator: validatename,
+            // message:'请输入用户名'
+          },
+        ],
+        password: [
+          {
+            required: true,
+            trigger: "blur",
+            validator: validatePwd,
+            // message:'请输入密码'
+          },
+        ],
+      },
+    };
+  },
+  mounted() {
+    document.body.style.backgroundColor = "#393e4a";
+  },
+  methods: {
+    // 登录
+    submitForm(formName) {
+      console.log('1111')
+      this.$refs[formName].validata(async (valid) => {
+        if (valid) {
+          // 验证用户名和密码是否正确
+          let res = await userLogin(this.form);
+          let { code, token } = res.data;
+          if (code == 1) {
+            localStorage.setItem('token', token);
+            this.$message({
+              message: "登录成功",
+              type: "success",
+            });
+            this.$router.push({path:'/user_information'});
+          } else {
+            this.$message.error("登录失败");
+            this.$refs[formName].resetFields();
+          }
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+
+  },
+};
+</script>
+
+<style lang="less" scoped>
+.login_container {
+  background-color: black;
+  width: 450px;
+  border-radius: 5px;
+  position: absolute;
+  left: 70%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.login_title {
+  color: aliceblue;
+  /* font-weight: bold; */
+  font-size: 150%;
+  text-align: center;
+  line-height: 80px;
+}
+
+.login_header {
+  height: 80px;
+}
+/* 设置登录样式 */
+.el-button--primary {
+  background-color: #128174;
+  width: 300px;
+  height: 45px;
+  border-color: #128174;
+  color: aliceblue;
+  font-size: 140%;
+}
+.login_svg {
+  width: 450px;
+  height: auto;
+  justify-content: center;
+  display: flex;
+  background: #393e4a;
+  align-items: center;
+
+  margin-top: 3%;
+  margin-left: 13%;
+}
+.logo_svg {
+  width: 50px;
+}
+.el-input {
+  width: 300px;
+}
+.login_head {
+  margin-left: 5%;
+}
+</style>

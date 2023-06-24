@@ -1,0 +1,54 @@
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,image/jpeg
+    min-response-size: 0
+  servlet:
+    session:
+      timeout: 604800
+  max-http-header-size: 8192
+
+
+spring:
+  application:
+    name: ZFXS
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  datasource:
+    druid:
+      use-ping-method: false
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/zfxs?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+#      username: root
+      username: zfxs
+      password: Gwh04162533
+
+
+
+
+#mybatis-plus:
+#  configuration:
+#    #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
+#    map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  global-config:
+#    db-config:
+#      id-type: ASSIGN_ID
+
+zfxs:
+  path:
+    /zfxs/pic/
+#
+#zfxs:
+#  path:
+#    D:\图片\zfxs\
+
+#open:
+#  ai:
+#    key: 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
+#    request:
+#      timeout: 100000
+#    model: text-davinci-003
